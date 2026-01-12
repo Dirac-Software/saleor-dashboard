@@ -1,0 +1,16 @@
+
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        API_URL: ${API_URL}
+        APP_MOUNT_URI: ${APP_MOUNT_URI}
+        APPS_MARKETPLACE_API_URL: ${APPS_MARKETPLACE_API_URL}
+        EXTENSIONS_API_URL: ${EXTENSIONS_API_URL}
+        LOCALE_CODE: ${LOCALE_CODE}
+    env_file:
+    - .env
+    ports:
+      - "9001:80"
