@@ -7,7 +7,7 @@ import Checkbox from "@dashboard/components/Checkbox";
 import Chip from "@dashboard/components/Chip";
 import Hr from "@dashboard/components/Hr";
 import { SaleorThrobber } from "@dashboard/components/Throbber";
-import { ChannelFragment, ExportProductsInput, ProductFieldEnum } from "@dashboard/graphql";
+import { ChannelFragment, ProductFieldEnum } from "@dashboard/graphql";
 import { ChangeEvent, FormChange } from "@dashboard/hooks/useForm";
 import useSearchQuery from "@dashboard/hooks/useSearchQuery";
 import { sectionNames } from "@dashboard/intl";
@@ -20,6 +20,7 @@ import { PropsWithChildren } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import useProductExportFieldMessages from "./messages";
+import { ExportProductsInput } from "./types";
 
 export const attributeNamePrefix = "attribute-";
 export const warehouseNamePrefix = "warehouse-";

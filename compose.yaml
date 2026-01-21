@@ -1,4 +1,3 @@
-
 services:
   dashboard:
     build:
@@ -11,6 +10,6 @@ services:
         EXTENSIONS_API_URL: ${EXTENSIONS_API_URL}
         LOCALE_CODE: ${LOCALE_CODE}
     env_file:
-    - .env
+      - .env
     ports:
       - "9001:80"

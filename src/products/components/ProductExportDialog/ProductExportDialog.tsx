@@ -6,7 +6,6 @@ import { DashboardModal } from "@dashboard/components/Modal";
 import {
   ChannelFragment,
   ExportErrorFragment,
-  ExportProductsInput,
   SearchAttributesQuery,
   WarehouseFragment,
 } from "@dashboard/graphql";
@@ -29,7 +28,7 @@ import ProductExportDialogInfo, {
   attributeNamePrefix,
   warehouseNamePrefix,
 } from "./ProductExportDialogInfo";
-import { exportSettingsInitialFormData } from "./types";
+import { ExportProductsInput, exportSettingsInitialFormData } from "./types";
 
 enum ProductExportStep {
   INFO = 0,

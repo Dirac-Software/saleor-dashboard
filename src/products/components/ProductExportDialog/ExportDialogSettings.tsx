@@ -1,3 +1,4 @@
+import Checkbox from "@dashboard/components/Checkbox";
 import Hr from "@dashboard/components/Hr";
 import {
   NewRadioGroupField as RadioGroupField,
@@ -7,8 +8,9 @@ import { ExportErrorFragment, ExportScope, FileTypesEnum } from "@dashboard/grap
 import { ChangeEvent } from "@dashboard/hooks/useForm";
 import { getFormErrors } from "@dashboard/utils/errors";
 import getExportErrorMessage from "@dashboard/utils/errors/export";
-import { Text } from "@saleor/macaw-ui-next";
-import { useIntl } from "react-intl";
+import { FormControlLabel } from "@material-ui/core";
+import { Box, Text } from "@saleor/macaw-ui-next";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ExportSettingsInput } from "./types";
 
@@ -29,7 +31,12 @@ interface ExportDialogSettingsProps {
   allowScopeSelection?: boolean;
 }
 
-const formFields: Array<keyof ExportSettingsInput> = ["fileType", "scope"];
+const formFields: Array<keyof ExportSettingsInput> = [
+  "fileType",
+  "scope",
+  "embedImages",
+  "compressVariants",
+];
 const ExportDialogSettings = ({
   data,
   errors,
@@ -124,6 +131,50 @@ const ExportDialogSettings = ({
         choices={productExportTypeChoices}
         errorMessage={getExportErrorMessage(formErrors.fileType, intl)}
       />
+
+      {data.fileType === FileTypesEnum.XLSX && (
+        <>
+          <Hr />
+          <Box marginTop={2}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={data.embedImages}
+                  name="embedImages"
+                  onChange={event =>
+                    onChange({ target: { name: "embedImages", value: event.target.checked } })
+                  }
+                />
+              }
+              label={
+                <FormattedMessage
+                  id="jfow+e"
+                  defaultMessage="Embed images directly in Excel (larger files)"
+                />
+              }
+            />
+          </Box>
+          <Box marginTop={2}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={data.compressVariants}
+                  name="compressVariants"
+                  onChange={event =>
+                    onChange({ target: { name: "compressVariants", value: event.target.checked } })
+                  }
+                />
+              }
+              label={
+                <FormattedMessage
+                  id="8fQun1"
+                  defaultMessage="Compress variants into Size[Quantity] format"
+                />
+              }
+            />
+          </Box>
+        </>
+      )}
     </>
   );
 };
