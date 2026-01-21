@@ -1,5 +1,5 @@
 import {
-  ExportInfoInput,
+  ExportInfoInput as GraphQLExportInfoInput,
   ExportProductsInput as GraphQLExportProductsInput,
   ExportScope,
   FileTypesEnum,
@@ -9,13 +9,19 @@ import {
 } from "@dashboard/graphql";
 
 // Extended type to include new fields that will be added to GraphQL schema
-type ExportProductsInputExtended = GraphQLExportProductsInput & {
+type ExportInfoInputExtended = GraphQLExportInfoInput & {
+  embedImages?: boolean;
+  compressVariants?: boolean;
+};
+
+type ExportProductsInputExtended = Omit<GraphQLExportProductsInput, "exportInfo"> & {
+  exportInfo?: InputMaybe<ExportInfoInputExtended>;
   embedImages?: boolean;
   compressVariants?: boolean;
 };
 
 export class ProductsExportParameters {
-  private readonly exportInfo?: InputMaybe<ExportInfoInput>;
+  private readonly exportInfo?: InputMaybe<ExportInfoInputExtended>;
 
   private readonly fileType: FileTypesEnum;
 
@@ -25,39 +31,32 @@ export class ProductsExportParameters {
 
   private readonly scope: ExportScope;
 
-  private readonly embedImages?: boolean;
-
-  private readonly compressVariants?: boolean;
-
   constructor(input: ExportProductsInputExtended) {
-    this.exportInfo = input.exportInfo;
-    this.fileType = input.fileType;
-    this.filter = input.filter;
-    this.ids = input.ids;
-    this.scope = input.scope;
-    this.embedImages = input.embedImages;
-    this.compressVariants = input.compressVariants;
+    // Move embedImages and compressVariants from root level into exportInfo
+    const { embedImages, compressVariants, exportInfo, ...rest } = input;
+
+    this.exportInfo = exportInfo
+      ? {
+          ...exportInfo,
+          embedImages: embedImages !== undefined ? embedImages : exportInfo.embedImages,
+          compressVariants:
+            compressVariants !== undefined ? compressVariants : exportInfo.compressVariants,
+        }
+      : undefined;
+
+    this.fileType = rest.fileType;
+    this.filter = rest.filter;
+    this.ids = rest.ids;
+    this.scope = rest.scope;
   }
 
   asExportProductsInput(): GraphQLExportProductsInput {
-    const result: any = {
-      exportInfo: this.exportInfo,
+    return {
+      exportInfo: this.exportInfo as any,
       fileType: this.fileType,
       filter: this.filter,
       ids: this.ids,
       scope: this.scope,
     };
-
-    // Only include new fields if they are defined
-    // Once GraphQL schema is updated, these will be part of the type
-    if (this.embedImages !== undefined) {
-      result.embedImages = this.embedImages;
-    }
-
-    if (this.compressVariants !== undefined) {
-      result.compressVariants = this.compressVariants;
-    }
-
-    return result;
   }
 }

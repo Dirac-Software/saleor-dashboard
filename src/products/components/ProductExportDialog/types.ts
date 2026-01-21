@@ -1,13 +1,20 @@
 import {
+  ExportInfoInput as GraphQLExportInfoInput,
   ExportProductsInput as GraphQLExportProductsInput,
   ExportScope,
   FileTypesEnum,
+  InputMaybe,
 } from "@dashboard/graphql";
 
 // Extended type to include new fields that will be added to GraphQL schema
-export type ExportProductsInput = GraphQLExportProductsInput & {
+export type ExportInfoInput = GraphQLExportInfoInput & {
   embedImages?: boolean;
   compressVariants?: boolean;
+};
+
+// Extended ExportProductsInput that uses the extended ExportInfoInput
+export type ExportProductsInput = Omit<GraphQLExportProductsInput, "exportInfo"> & {
+  exportInfo?: InputMaybe<ExportInfoInput>;
 };
 
 export interface ExportSettingsInput {
