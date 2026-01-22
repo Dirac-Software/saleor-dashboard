@@ -10,6 +10,7 @@ import {
 export type ExportInfoInput = GraphQLExportInfoInput & {
   embedImages?: boolean;
   compressVariants?: boolean;
+  priceListFormat?: boolean;
 };
 
 // Extended ExportProductsInput that uses the extended ExportInfoInput
@@ -22,6 +23,7 @@ export interface ExportSettingsInput {
   fileType: FileTypesEnum;
   embedImages?: boolean;
   compressVariants?: boolean;
+  priceListFormat?: boolean;
 }
 
 export interface ExportSettingsFormData {
@@ -29,6 +31,7 @@ export interface ExportSettingsFormData {
   scope: ExportScope;
   embedImages?: boolean;
   compressVariants?: boolean;
+  priceListFormat?: boolean;
 }
 
 export const exportSettingsInitialFormData = {
@@ -36,6 +39,7 @@ export const exportSettingsInitialFormData = {
   scope: ExportScope.ALL,
   embedImages: false,
   compressVariants: false,
+  priceListFormat: false,
 };
 
 export const exportSettingsInitialFormDataWithIds = {
@@ -43,4 +47,5 @@ export const exportSettingsInitialFormDataWithIds = {
   scope: ExportScope.IDS,
   embedImages: false,
   compressVariants: false,
+  priceListFormat: false,
 };

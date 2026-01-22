@@ -321,6 +321,7 @@ const ProductList = ({ params }: ProductListProps) => {
         initialSearch={params.query || ""}
         tabs={presets.map(tab => tab.name)}
         onExport={() => openModal("export")}
+        onExportPriceList={() => openModal("export-price-list")}
         selectedChannelId={selectedChannel?.id}
         selectedProductIds={selectedRowIds}
         onSelectProductIds={handleSetSelectedProductIds}
@@ -364,6 +365,38 @@ const ProductList = ({ params }: ProductListProps) => {
         selectedProducts={selectedRowIds.length}
         warehouses={mapEdgesToItems(warehouses?.data?.warehouses) || []}
         channels={availableChannels}
+        onClose={closeModal}
+        onSubmit={data => {
+          const productsExportParams = new ProductsExportParameters({
+            ...data,
+            ...filterVariables,
+            ids: selectedRowIds,
+          });
+
+          exportProducts({
+            variables: {
+              input: productsExportParams.asExportProductsInput(),
+            },
+          });
+        }}
+      />
+      <ProductExportDialog
+        attributes={mapEdgesToItems(searchAttributes?.result?.data?.search) || []}
+        hasMore={searchAttributes.result.data?.search.pageInfo.hasNextPage}
+        loading={searchAttributes.result.loading || countAllProducts.loading || warehouses.loading}
+        onFetch={searchAttributes.search}
+        onFetchMore={searchAttributes.loadMore}
+        open={params.action === "export-price-list"}
+        confirmButtonState={exportProductsOpts.status}
+        errors={exportProductsOpts.data?.exportProducts.errors || []}
+        productQuantity={{
+          all: countAllProducts.data?.products?.totalCount,
+          filter: data?.products?.totalCount,
+        }}
+        selectedProducts={selectedRowIds.length}
+        warehouses={mapEdgesToItems(warehouses?.data?.warehouses) || []}
+        channels={availableChannels}
+        isPriceListMode={true}
         onClose={closeModal}
         onSubmit={data => {
           const productsExportParams = new ProductsExportParameters({

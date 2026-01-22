@@ -36,6 +36,7 @@ const formFields: Array<keyof ExportSettingsInput> = [
   "scope",
   "embedImages",
   "compressVariants",
+  "priceListFormat",
 ];
 const ExportDialogSettings = ({
   data,
@@ -169,6 +170,25 @@ const ExportDialogSettings = ({
                 <FormattedMessage
                   id="8fQun1"
                   defaultMessage="Compress variants into Size[Quantity] format"
+                />
+              }
+            />
+          </Box>
+          <Box marginTop={2}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={data.priceListFormat}
+                  name="priceListFormat"
+                  onChange={event =>
+                    onChange({ target: { name: "priceListFormat", value: event.target.checked } })
+                  }
+                />
+              }
+              label={
+                <FormattedMessage
+                  id="K+O1Vm"
+                  defaultMessage="Print for price list (use price list format)"
                 />
               }
             />

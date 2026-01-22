@@ -67,6 +67,7 @@ interface ProductListPageProps
   hasPresetsChanged: boolean;
   onAdd: () => void;
   onExport: () => void;
+  onExportPriceList: () => void;
   onTabUpdate: (tabName: string) => void;
   onTabDelete: (tabIndex: number) => void;
   availableColumnsAttributesOpts: ReturnType<typeof useAvailableColumnAttributesLazyQuery>;
@@ -90,6 +91,7 @@ const ProductListPage = (props: ProductListPageProps) => {
     settings,
     onAdd,
     onExport,
+    onExportPriceList,
     onSearchChange,
     onUpdateListSettings,
     selectedChannelId,
@@ -183,6 +185,15 @@ const ProductListPage = (props: ProductListPageProps) => {
                   }),
                   onSelect: onExport,
                   testId: "export",
+                },
+                {
+                  label: intl.formatMessage({
+                    id: "V08FOZ",
+                    defaultMessage: "Export for Price List",
+                    description: "export products in price list format, button",
+                  }),
+                  onSelect: onExportPriceList,
+                  testId: "export-price-list",
                 },
                 ...extensionMenuItems,
               ]}

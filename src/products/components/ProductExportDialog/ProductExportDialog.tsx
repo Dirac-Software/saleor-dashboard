@@ -6,6 +6,9 @@ import { DashboardModal } from "@dashboard/components/Modal";
 import {
   ChannelFragment,
   ExportErrorFragment,
+  ExportScope,
+  FileTypesEnum,
+  ProductFieldEnum,
   SearchAttributesQuery,
   WarehouseFragment,
 } from "@dashboard/graphql";
@@ -67,6 +70,29 @@ const initialForm: ExportProductsInput = {
   },
   ...exportSettingsInitialFormData,
 };
+
+// Smart defaults for price list export
+const priceListDefaults: ExportProductsInput = {
+  exportInfo: {
+    attributes: [],
+    channels: [], // User must select
+    fields: [
+      ProductFieldEnum.NAME,
+      ProductFieldEnum.DESCRIPTION,
+      ProductFieldEnum.PRODUCT_MEDIA,
+      ProductFieldEnum.VARIANT_MEDIA,
+      ProductFieldEnum.CATEGORY,
+      ProductFieldEnum.PRODUCT_TYPE,
+    ],
+    warehouses: [],
+    embedImages: true,
+    priceListFormat: true,
+    compressVariants: false,
+  },
+  fileType: FileTypesEnum.XLSX,
+  scope: ExportScope.ALL,
+};
+
 const ProductExportSteps = makeCreatorSteps<ProductExportStep>();
 
 interface ProductExportDialogProps extends DialogProps, FetchMoreProps {
@@ -77,6 +103,12 @@ interface ProductExportDialogProps extends DialogProps, FetchMoreProps {
   productQuantity: ExportItemsQuantity;
   selectedProducts: number;
   warehouses: WarehouseFragment[];
+  isPriceListMode?: boolean;
+  initialFormData?: Partial<ExportProductsInput> & {
+    priceListFormat?: boolean;
+    embedImages?: boolean;
+    compressVariants?: boolean;
+  };
   onFetch: (query: string) => void;
   onSubmit: (data: ExportProductsInput) => void;
 }
@@ -87,6 +119,8 @@ const ProductExportDialog = ({
   confirmButtonState,
   errors,
   productQuantity,
+  isPriceListMode,
+  initialFormData,
   onClose,
   onSubmit,
   open,
@@ -104,7 +138,11 @@ const ProductExportDialog = ({
   const intl = useIntl();
   const [selectedAttributes, setSelectedAttributes] = useState<Option[]>([]);
   const [selectedChannels, setSelectedChannels] = useState([]);
-  const { change, data, reset, submit } = useForm(initialForm, onSubmit);
+
+  // Use price list defaults if in price list mode, otherwise use initial form
+  const baseForm = isPriceListMode ? priceListDefaults : initialForm;
+  const formData = initialFormData ? { ...baseForm, ...initialFormData } : baseForm;
+  const { change, data, reset, submit } = useForm(formData, onSubmit);
 
   useModalDialogOpen(open, {
     onClose: () => {
@@ -213,8 +251,28 @@ const ProductExportDialog = ({
     <DashboardModal onChange={onClose} open={open}>
       <DashboardModal.Content size="sm">
         <DashboardModal.Header>
-          <FormattedMessage {...messages.title} />
+          {isPriceListMode ? (
+            <FormattedMessage
+              id="DGDF/Q"
+              defaultMessage="Export Price List"
+              description="export price list dialog header"
+            />
+          ) : (
+            <FormattedMessage {...messages.title} />
+          )}
         </DashboardModal.Header>
+
+        {isPriceListMode && (
+          <Box marginBottom={4}>
+            <Text color="default2" size={2}>
+              <FormattedMessage
+                id="kDqbqA"
+                defaultMessage="Pre-configured export for price lists. Select your channel(s) and products below. You can still customize fields and options if needed."
+                description="price list export helper text"
+              />
+            </Text>
+          </Box>
+        )}
 
         <ProductExportSteps currentStep={step} steps={steps} onStepClick={setStep} />
         {step === ProductExportStep.INFO && (

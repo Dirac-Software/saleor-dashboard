@@ -12,12 +12,14 @@ import {
 type ExportInfoInputExtended = GraphQLExportInfoInput & {
   embedImages?: boolean;
   compressVariants?: boolean;
+  priceListFormat?: boolean;
 };
 
 type ExportProductsInputExtended = Omit<GraphQLExportProductsInput, "exportInfo"> & {
   exportInfo?: InputMaybe<ExportInfoInputExtended>;
   embedImages?: boolean;
   compressVariants?: boolean;
+  priceListFormat?: boolean;
 };
 
 export class ProductsExportParameters {
@@ -32,8 +34,8 @@ export class ProductsExportParameters {
   private readonly scope: ExportScope;
 
   constructor(input: ExportProductsInputExtended) {
-    // Move embedImages and compressVariants from root level into exportInfo
-    const { embedImages, compressVariants, exportInfo, ...rest } = input;
+    // Move embedImages, compressVariants, and priceListFormat from root level into exportInfo
+    const { embedImages, compressVariants, priceListFormat, exportInfo, ...rest } = input;
 
     this.exportInfo = exportInfo
       ? {
@@ -41,6 +43,8 @@ export class ProductsExportParameters {
           embedImages: embedImages !== undefined ? embedImages : exportInfo.embedImages,
           compressVariants:
             compressVariants !== undefined ? compressVariants : exportInfo.compressVariants,
+          priceListFormat:
+            priceListFormat !== undefined ? priceListFormat : exportInfo.priceListFormat,
         }
       : undefined;
 
