@@ -15511,6 +15511,87 @@ export function useProductVariantBulkUpdateMutation(baseOptions?: ApolloReactHoo
 export type ProductVariantBulkUpdateMutationHookResult = ReturnType<typeof useProductVariantBulkUpdateMutation>;
 export type ProductVariantBulkUpdateMutationResult = Apollo.MutationResult<Types.ProductVariantBulkUpdateMutation>;
 export type ProductVariantBulkUpdateMutationOptions = Apollo.BaseMutationOptions<Types.ProductVariantBulkUpdateMutation, Types.ProductVariantBulkUpdateMutationVariables>;
+export const ProductIngestionUploadFileDocument = gql`
+    mutation ProductIngestionUploadFile($input: ProductIngestionFileUploadInput!) {
+  productIngestionUploadFile(input: $input) {
+    fileId
+    availableColumns
+    rowCount
+    sheetNames
+    errors {
+      ...ProductError
+    }
+  }
+}
+    ${ProductErrorFragmentDoc}`;
+export type ProductIngestionUploadFileMutationFn = Apollo.MutationFunction<Types.ProductIngestionUploadFileMutation, Types.ProductIngestionUploadFileMutationVariables>;
+
+/**
+ * __useProductIngestionUploadFileMutation__
+ *
+ * To run a mutation, you first call `useProductIngestionUploadFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useProductIngestionUploadFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [productIngestionUploadFileMutation, { data, loading, error }] = useProductIngestionUploadFileMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useProductIngestionUploadFileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Types.ProductIngestionUploadFileMutation, Types.ProductIngestionUploadFileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<Types.ProductIngestionUploadFileMutation, Types.ProductIngestionUploadFileMutationVariables>(ProductIngestionUploadFileDocument, options);
+      }
+export type ProductIngestionUploadFileMutationHookResult = ReturnType<typeof useProductIngestionUploadFileMutation>;
+export type ProductIngestionUploadFileMutationResult = Apollo.MutationResult<Types.ProductIngestionUploadFileMutation>;
+export type ProductIngestionUploadFileMutationOptions = Apollo.BaseMutationOptions<Types.ProductIngestionUploadFileMutation, Types.ProductIngestionUploadFileMutationVariables>;
+export const ProductIngestionIngestDocument = gql`
+    mutation ProductIngestionIngest($input: ProductIngestionConfigInput!) {
+  productIngestionIngest(input: $input) {
+    success
+    createdProductsCount
+    updatedProductsCount
+    skippedProductsCount
+    totalVariantsCreated
+    totalVariantsUpdated
+    warehouseName
+    errors {
+      ...ProductError
+    }
+  }
+}
+    ${ProductErrorFragmentDoc}`;
+export type ProductIngestionIngestMutationFn = Apollo.MutationFunction<Types.ProductIngestionIngestMutation, Types.ProductIngestionIngestMutationVariables>;
+
+/**
+ * __useProductIngestionIngestMutation__
+ *
+ * To run a mutation, you first call `useProductIngestionIngestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useProductIngestionIngestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [productIngestionIngestMutation, { data, loading, error }] = useProductIngestionIngestMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useProductIngestionIngestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Types.ProductIngestionIngestMutation, Types.ProductIngestionIngestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<Types.ProductIngestionIngestMutation, Types.ProductIngestionIngestMutationVariables>(ProductIngestionIngestDocument, options);
+      }
+export type ProductIngestionIngestMutationHookResult = ReturnType<typeof useProductIngestionIngestMutation>;
+export type ProductIngestionIngestMutationResult = Apollo.MutationResult<Types.ProductIngestionIngestMutation>;
+export type ProductIngestionIngestMutationOptions = Apollo.BaseMutationOptions<Types.ProductIngestionIngestMutation, Types.ProductIngestionIngestMutationVariables>;
 export const ProductListDocument = gql`
     query ProductList($first: Int, $after: String, $last: Int, $before: String, $filter: ProductFilterInput, $search: String, $where: ProductWhereInput, $channel: String, $sort: ProductOrder, $hasChannel: Boolean!, $includeCategories: Boolean!, $includeCollections: Boolean!) {
   products(
@@ -17433,6 +17514,16 @@ export const SearchWarehousesDocument = gql`
       node {
         id
         name
+        address {
+          streetAddress1
+          streetAddress2
+          city
+          postalCode
+          country {
+            code
+            country
+          }
+        }
       }
     }
     pageInfo {

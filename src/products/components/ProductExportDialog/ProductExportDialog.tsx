@@ -80,7 +80,6 @@ const priceListDefaults: ExportProductsInput = {
       ProductFieldEnum.NAME,
       ProductFieldEnum.DESCRIPTION,
       ProductFieldEnum.PRODUCT_MEDIA,
-      ProductFieldEnum.VARIANT_MEDIA,
       ProductFieldEnum.CATEGORY,
       ProductFieldEnum.PRODUCT_TYPE,
     ],

@@ -37,6 +37,7 @@ import usePaginator, {
 import { useRowSelection } from "@dashboard/hooks/useRowSelection";
 import { commonMessages } from "@dashboard/intl";
 import ProductExportDialog from "@dashboard/products/components/ProductExportDialog";
+import { ProductIngestionDialog } from "@dashboard/products/components/ProductIngestionDialog";
 import {
   getAttributeIdFromColumnValue,
   isAttributeColumnValue,
@@ -95,14 +96,14 @@ const ProductList = ({ params }: ProductListProps) => {
       ...DEFAULT_INITIAL_SEARCH_DATA,
       first: 10,
     },
-    skip: params.action !== "export",
+    skip: params.action !== "export" && params.action !== "export-price-list",
   });
 
   const warehouses = useWarehouseListQuery({
     variables: {
       first: 100,
     },
-    skip: params.action !== "export",
+    skip: params.action !== "export" && params.action !== "export-price-list",
   });
   const { availableChannels } = useAppChannel(false);
   const limitOpts = useShopLimitsQuery({
@@ -138,7 +139,7 @@ const ProductList = ({ params }: ProductListProps) => {
     reset: clearRowSelection,
   });
   const countAllProducts = useProductCountQuery({
-    skip: params.action !== "export",
+    skip: params.action !== "export" && params.action !== "export-price-list",
   });
   const [exportProducts, exportProductsOpts] = useProductExportMutation({
     onCompleted: data => {
@@ -322,6 +323,7 @@ const ProductList = ({ params }: ProductListProps) => {
         tabs={presets.map(tab => tab.name)}
         onExport={() => openModal("export")}
         onExportPriceList={() => openModal("export-price-list")}
+        onImport={() => openModal("import")}
         selectedChannelId={selectedChannel?.id}
         selectedProductIds={selectedRowIds}
         onSelectProductIds={handleSetSelectedProductIds}
@@ -410,6 +412,43 @@ const ProductList = ({ params }: ProductListProps) => {
               input: productsExportParams.asExportProductsInput(),
             },
           });
+        }}
+      />
+      <ProductIngestionDialog
+        open={params.action === "import"}
+        onClose={closeModal}
+        onCompleted={result => {
+          if (result.success) {
+            notify({
+              status: "success",
+              text: intl.formatMessage(
+                {
+                  id: "5bG5V8",
+                  defaultMessage:
+                    "Successfully imported to {warehouse}: {created} products created, {updated} updated, {skipped} skipped. Variants: {variantsCreated} created, {variantsUpdated} updated.",
+                  description: "import success message",
+                },
+                {
+                  warehouse: result.warehouseName,
+                  created: result.createdProductsCount,
+                  updated: result.updatedProductsCount,
+                  skipped: result.skippedProductsCount,
+                  variantsCreated: result.totalVariantsCreated,
+                  variantsUpdated: result.totalVariantsUpdated,
+                },
+              ),
+            });
+            refetch();
+          } else {
+            notify({
+              status: "error",
+              text: intl.formatMessage({
+                id: "56oxM1",
+                defaultMessage: "Failed to import products. Please check your data and try again.",
+                description: "import error message",
+              }),
+            });
+          }
         }}
       />
       <SaveFilterTabDialog

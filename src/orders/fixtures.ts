@@ -2632,6 +2632,19 @@ export const shopOrderSettings: ShopOrderSettingsFragment = {
   fulfillmentAllowUnpaid: true,
 };
 
+const mockWarehouseAddress = {
+  streetAddress1: "123 Test St",
+  streetAddress2: "",
+  city: "Test City",
+  postalCode: "12345",
+  country: {
+    code: "US",
+    country: "United States",
+    __typename: "CountryDisplay" as const,
+  },
+  __typename: "Address" as const,
+};
+
 export const warehouseSearch: SearchWarehousesQuery["search"] = {
   totalCount: 20,
   edges: [
@@ -2639,6 +2652,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOmJiZTEwZjk1LTQyYjAtNDRlMS04Yjc5LWU5MjllMmViYTRjMQ==",
         name: "CyVou-97803",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2647,6 +2661,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOjdhOGViNThhLTYwN2QtNGMxNC04ODVmLTBiMWU3ZDcyMTIyNQ==",
         name: "CyWarehouse72715",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2655,6 +2670,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOjY2NWIxZWFmLTU5MDYtNGE0Mi1iYWVkLTc1ODQ3YWNhMWI1NQ==",
         name: "CyWarehouseCheckout70441",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2663,6 +2679,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOjdkNmVmNmFkLWY4NTMtNGVmNS1iMzQ5LTUyY2I2N2U3NmIwZQ==",
         name: "CyWeightRates-78849",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2671,6 +2688,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOjcwZjMyYTUyLWVlODQtNGExYi1iMjgzLTgwYjllMzgyNDlkNg==",
         name: "EditShipping-82885",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2679,6 +2697,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOjczYzI0OGNmLTliNzAtNDlmMi1hMDRlLTM4ZTYxMmQ5MDYwMQ==",
         name: "Europe for click and collect",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2687,6 +2706,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOjc4OGUyMGRlLTlmYTAtNDI5My1iZDk2LWUwM2RjY2RhMzc0ZQ==",
         name: "Oceania",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2695,6 +2715,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOjNiZDM0YjEyLTllNDktNDMwZC1iM2QyLTRkYmRhMjM1MGUyOQ==",
         name: "ProductsWithoutSkuInOrder",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2703,6 +2724,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOmU4M2U2NjQ2LTFhYjctNGNmNC05N2M4LTFiZjI2NGE2NjQ4Yw==",
         name: "StocksThreshold",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2711,6 +2733,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOmJkMmQ1NDFjLWQwMjMtNDAwNi05YmRjLWZhZTA4OWZlNzZiYg==",
         name: "UpdateProductsSku59844",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",
@@ -2719,6 +2742,7 @@ export const warehouseSearch: SearchWarehousesQuery["search"] = {
       node: {
         id: "V2FyZWhvdXNlOjgzNDMwMzI4LTI2YWItNDNkZS1hNzdhLTVmNGNhMTljMDJhNg==",
         name: "WithoutShipmentCheckout-4505",
+        address: mockWarehouseAddress,
         __typename: "Warehouse",
       },
       __typename: "WarehouseCountableEdge",

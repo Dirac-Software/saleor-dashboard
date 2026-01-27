@@ -68,6 +68,7 @@ interface ProductListPageProps
   onAdd: () => void;
   onExport: () => void;
   onExportPriceList: () => void;
+  onImport: () => void;
   onTabUpdate: (tabName: string) => void;
   onTabDelete: (tabIndex: number) => void;
   availableColumnsAttributesOpts: ReturnType<typeof useAvailableColumnAttributesLazyQuery>;
@@ -92,6 +93,7 @@ const ProductListPage = (props: ProductListPageProps) => {
     onAdd,
     onExport,
     onExportPriceList,
+    onImport,
     onSearchChange,
     onUpdateListSettings,
     selectedChannelId,
@@ -194,6 +196,15 @@ const ProductListPage = (props: ProductListPageProps) => {
                   }),
                   onSelect: onExportPriceList,
                   testId: "export-price-list",
+                },
+                {
+                  label: intl.formatMessage({
+                    id: "wt60mV",
+                    defaultMessage: "Import Products",
+                    description: "import products from file, button",
+                  }),
+                  onSelect: onImport,
+                  testId: "import",
                 },
                 ...extensionMenuItems,
               ]}
