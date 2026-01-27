@@ -31,8 +31,8 @@ export default defineConfig(({ command, mode }) => {
   const isDev = command !== "build";
   const env = loadEnv(mode, process.cwd(), "");
   /*
-    Using explicit env variables, there is no need to expose all of them (security).
-  */
+	  Using explicit env variables, there is no need to expose all of them (security).
+	*/
   const {
     NODE_ENV,
     API_URL,
@@ -64,7 +64,7 @@ export default defineConfig(({ command, mode }) => {
     npm_package_version,
   } = env;
 
-  const base = STATIC_URL ?? "/";
+  const base = "/";
   const featureFlagsEnvs = Object.fromEntries(
     Object.entries(env).filter(([flagKey]) => flagKey.startsWith("FF_")),
   );
@@ -114,9 +114,9 @@ export default defineConfig(({ command, mode }) => {
 
   const globals = {
     /*
-      "qs" package uses 'get-intrinsic' whish refers to the global object, we need to recreate it.
-      Issue presents only on development mode.
-    */
+		  "qs" package uses 'get-intrinsic' whish refers to the global object, we need to recreate it.
+		  Issue presents only on development mode.
+		*/
     ...(isDev ? { global: {} } : {}),
     FLAGS_SERVICE_ENABLED: FLAGS_SERVICE_ENABLED === "true",
     // Keep all feature flags from env in global variable
@@ -128,7 +128,14 @@ export default defineConfig(({ command, mode }) => {
     base,
     envDir: "..",
     server: {
-      port: 9000,
+      port: 9001,
+      host: true,
+      allowedHosts: [
+        "will-laptop.tail473fa.ts.net",
+        "will-laptop.prod.dirac.software",
+        "localhost",
+        "127.0.0.1",
+      ],
       fs: {
         allow: [searchForWorkspaceRoot(process.cwd()), "../.."],
       },
@@ -137,8 +144,8 @@ export default defineConfig(({ command, mode }) => {
       ...globals,
 
       /*
-        We still have references to process.env, we need to peserve them as workaround.
-      */
+			  We still have references to process.env, we need to peserve them as workaround.
+			*/
       "process.env": {
         NODE_ENV,
         API_URL,
@@ -170,9 +177,9 @@ export default defineConfig(({ command, mode }) => {
       assetsDir: ".",
       commonjsOptions: {
         /*
-          Fix dynamic imports by "require", Necessary for react-editor-js
-          Ref: https://github.com/Jungwoo-An/react-editor-js/blob/e58b7ba5e66d07912bb78f65ac911e4018d363e1/packages/react-editor-js/src/factory.ts#L5
-         */
+				  Fix dynamic imports by "require", Necessary for react-editor-js
+				  Ref: https://github.com/Jungwoo-An/react-editor-js/blob/e58b7ba5e66d07912bb78f65ac911e4018d363e1/packages/react-editor-js/src/factory.ts#L5
+				 */
         transformMixedEsModules: true,
       },
       rollupOptions: {
@@ -200,10 +207,10 @@ export default defineConfig(({ command, mode }) => {
         "@dashboard": path.resolve(__dirname, "./src"),
         src: path.resolve(__dirname, "./src"),
         /*
-          Moment.js/react-moment does not fully suport ES modules.
-          Vite resolves it by using jsnext:main https://github.com/moment/moment/blob/develop/package.json#L26.
-          We enforce to use a different path, ignoring jsnext:main field.
-        */
+				  Moment.js/react-moment does not fully suport ES modules.
+				  Vite resolves it by using jsnext:main https://github.com/moment/moment/blob/develop/package.json#L26.
+				  We enforce to use a different path, ignoring jsnext:main field.
+				*/
         moment: path.resolve(__dirname, "./node_modules/moment/min/moment-with-locales.js"),
       },
     },

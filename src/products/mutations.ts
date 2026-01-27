@@ -419,3 +419,35 @@ export const ProductVariantBulkUpdateMutation = gql`
     }
   }
 `;
+
+export const productIngestionUploadFileMutation = gql`
+  mutation ProductIngestionUploadFile($input: ProductIngestionFileUploadInput!) {
+    productIngestionUploadFile(input: $input) {
+      fileId
+      availableColumns
+      rowCount
+      sheetNames
+      # previewData - TODO: Uncomment when backend adds support for preview data
+      errors {
+        ...ProductError
+      }
+    }
+  }
+`;
+
+export const productIngestionIngestMutation = gql`
+  mutation ProductIngestionIngest($input: ProductIngestionConfigInput!) {
+    productIngestionIngest(input: $input) {
+      success
+      createdProductsCount
+      updatedProductsCount
+      skippedProductsCount
+      totalVariantsCreated
+      totalVariantsUpdated
+      warehouseName
+      errors {
+        ...ProductError
+      }
+    }
+  }
+`;

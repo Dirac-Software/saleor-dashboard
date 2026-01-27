@@ -20,6 +20,16 @@ export const searchWarehouses = gql`
         node {
           id
           name
+          address {
+            streetAddress1
+            streetAddress2
+            city
+            postalCode
+            country {
+              code
+              country
+            }
+          }
         }
       }
       pageInfo {

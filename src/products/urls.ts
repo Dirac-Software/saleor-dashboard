@@ -27,6 +27,7 @@ export type ProductListUrlDialog =
   | "delete"
   | "export"
   | "export-price-list"
+  | "import"
   | "create-product"
   | TabActionDialog;
 export enum ProductListUrlFiltersEnum {
