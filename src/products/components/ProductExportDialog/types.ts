@@ -16,6 +16,9 @@ export type ExportInfoInput = GraphQLExportInfoInput & {
 // Extended ExportProductsInput that uses the extended ExportInfoInput
 export type ExportProductsInput = Omit<GraphQLExportProductsInput, "exportInfo"> & {
   exportInfo?: InputMaybe<ExportInfoInput>;
+  embedImages?: boolean;
+  compressVariants?: boolean;
+  priceListFormat?: boolean;
 };
 
 export interface ExportSettingsInput {

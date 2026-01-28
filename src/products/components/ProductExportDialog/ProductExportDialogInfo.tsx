@@ -220,6 +220,7 @@ interface ProductExportDialogInfoProps extends FetchMoreProps {
   onSelectAllWarehouses: FormChange;
   onSelectAllChannels: (items: ChannelFragment[], selected: number) => void;
   onChannelSelect: (option: ChannelFragment) => void;
+  isPriceListMode?: boolean;
 }
 
 const ProductExportDialogInfo = ({
@@ -239,6 +240,7 @@ const ProductExportDialogInfo = ({
   onFetchMore,
   onSelectAllChannels,
   onSelectAllWarehouses,
+  isPriceListMode = false,
 }: ProductExportDialogInfoProps) => {
   const classes = useStyles({});
   const intl = useIntl();
@@ -338,116 +340,124 @@ const ProductExportDialogInfo = ({
             />
           </ChannelsAvailabilityDialogContentWrapper>
         </Accordion>
-        <FieldAccordion
-          className={classes.accordion}
-          title={intl.formatMessage({
-            id: "64aYF0",
-            defaultMessage: "Product Organization",
-            description: "informations about product organization, header",
-          })}
-          data={data}
-          fields={[
-            ProductFieldEnum.CATEGORY,
-            ProductFieldEnum.COLLECTIONS,
-            ProductFieldEnum.PRODUCT_TYPE,
-          ]}
-          onChange={handleFieldChange}
-          onToggleAll={handleToggleAllFields}
-          data-test-id="organization"
-        />
-        <Accordion
-          className={classes.accordion}
-          title={intl.formatMessage(sectionNames.attributes)}
-          quickPeek={
-            selectedAttributes.length > 0 && (
-              <div className={classes.quickPeekContainer}>
-                {selectedAttributes.slice(0, maxChips).map(attribute => (
-                  <Chip
-                    className={classes.chip}
-                    label={attribute.label}
-                    onClose={() =>
-                      onAttrtibuteSelect({
-                        target: {
-                          name: attributeNamePrefix + attribute.value,
-                          value: undefined,
-                        },
-                      })
-                    }
-                    key={attribute.value}
-                  />
-                ))}
-                {selectedAttributes.length > maxChips && (
-                  <Text className={classes.moreLabel} size={2} fontWeight="light">
-                    <FormattedMessage
-                      id="ve/Sph"
-                      defaultMessage="and {number} more"
-                      description="there are more elements of list that are hidden"
-                      values={{
-                        number: selectedAttributes.length - maxChips,
-                      }}
-                    />
-                  </Text>
-                )}
-              </div>
-            )
-          }
-          data-test-id="attributes"
-        >
-          <TextField
-            data-test-id="attribute-search-input"
-            name="query"
-            value={query}
-            onChange={onQueryChange}
-            label={intl.formatMessage({
-              id: "YicEbK",
-              defaultMessage: "Search Atrtibuttes",
-            })}
-            placeholder={intl.formatMessage({
-              id: "tIc2/h",
-              defaultMessage: "Search by attribute name",
-              description: "input helper text, search attributes",
-            })}
-            fullWidth
-            InputProps={{
-              autoComplete: "off",
-              endAdornment: loading && <SaleorThrobber size={16} />,
-            }}
-          />
-          <Hr className={classes.hr} />
-          {attributes.map(attribute => (
-            <Option
-              checked={data.exportInfo.attributes.includes(attribute.value)}
-              name={attributeNamePrefix + attribute.value}
-              onChange={onAttrtibuteSelect}
-              key={attribute.value}
+        {!isPriceListMode && (
+          <>
+            <FieldAccordion
+              className={classes.accordion}
+              title={intl.formatMessage({
+                id: "64aYF0",
+                defaultMessage: "Product Organization",
+                description: "informations about product organization, header",
+              })}
+              data={data}
+              fields={[
+                ProductFieldEnum.CATEGORY,
+                ProductFieldEnum.COLLECTIONS,
+                ProductFieldEnum.PRODUCT_TYPE,
+              ]}
+              onChange={handleFieldChange}
+              onToggleAll={handleToggleAllFields}
+              data-test-id="organization"
+            />
+            <Accordion
+              className={classes.accordion}
+              title={intl.formatMessage(sectionNames.attributes)}
+              quickPeek={
+                selectedAttributes.length > 0 && (
+                  <div className={classes.quickPeekContainer}>
+                    {selectedAttributes.slice(0, maxChips).map(attribute => (
+                      <Chip
+                        className={classes.chip}
+                        label={attribute.label}
+                        onClose={() =>
+                          onAttrtibuteSelect({
+                            target: {
+                              name: attributeNamePrefix + attribute.value,
+                              value: undefined,
+                            },
+                          })
+                        }
+                        key={attribute.value}
+                      />
+                    ))}
+                    {selectedAttributes.length > maxChips && (
+                      <Text className={classes.moreLabel} size={2} fontWeight="light">
+                        <FormattedMessage
+                          id="ve/Sph"
+                          defaultMessage="and {number} more"
+                          description="there are more elements of list that are hidden"
+                          values={{
+                            number: selectedAttributes.length - maxChips,
+                          }}
+                        />
+                      </Text>
+                    )}
+                  </div>
+                )
+              }
+              data-test-id="attributes"
             >
-              {attribute.label}
-            </Option>
-          ))}
-          {(hasMore || loading) && (
-            <div className={classes.loadMoreContainer}>
-              {hasMore && !loading && (
-                <Button color="primary" onClick={onFetchMore}>
-                  <FormattedMessage id="ZDJEat" defaultMessage="Load More" description="button" />
-                </Button>
+              <TextField
+                data-test-id="attribute-search-input"
+                name="query"
+                value={query}
+                onChange={onQueryChange}
+                label={intl.formatMessage({
+                  id: "YicEbK",
+                  defaultMessage: "Search Atrtibuttes",
+                })}
+                placeholder={intl.formatMessage({
+                  id: "tIc2/h",
+                  defaultMessage: "Search by attribute name",
+                  description: "input helper text, search attributes",
+                })}
+                fullWidth
+                InputProps={{
+                  autoComplete: "off",
+                  endAdornment: loading && <SaleorThrobber size={16} />,
+                }}
+              />
+              <Hr className={classes.hr} />
+              {attributes.map(attribute => (
+                <Option
+                  checked={data.exportInfo.attributes.includes(attribute.value)}
+                  name={attributeNamePrefix + attribute.value}
+                  onChange={onAttrtibuteSelect}
+                  key={attribute.value}
+                >
+                  {attribute.label}
+                </Option>
+              ))}
+              {(hasMore || loading) && (
+                <div className={classes.loadMoreContainer}>
+                  {hasMore && !loading && (
+                    <Button color="primary" onClick={onFetchMore}>
+                      <FormattedMessage
+                        id="ZDJEat"
+                        defaultMessage="Load More"
+                        description="button"
+                      />
+                    </Button>
+                  )}
+                  {loading && <SaleorThrobber size={32} />}
+                </div>
               )}
-              {loading && <SaleorThrobber size={32} />}
-            </div>
-          )}
-        </Accordion>
-        <FieldAccordion
-          className={classes.accordion}
-          title={intl.formatMessage({
-            id: "jj3Cb8",
-            defaultMessage: "Financial Information",
-            description: "informations about product prices etc, header",
-          })}
-          data={data}
-          fields={[ProductFieldEnum.CHARGE_TAXES]}
-          onChange={handleFieldChange}
-          onToggleAll={handleToggleAllFields}
-          data-test-id="financial"
-        />
+            </Accordion>
+            <FieldAccordion
+              className={classes.accordion}
+              title={intl.formatMessage({
+                id: "jj3Cb8",
+                defaultMessage: "Financial Information",
+                description: "informations about product prices etc, header",
+              })}
+              data={data}
+              fields={[ProductFieldEnum.CHARGE_TAXES]}
+              onChange={handleFieldChange}
+              onToggleAll={handleToggleAllFields}
+              data-test-id="financial"
+            />
+          </>
+        )}
         <Accordion
           className={classes.accordion}
           title={intl.formatMessage({
@@ -571,23 +581,25 @@ const ProductExportDialogInfo = ({
             </Option>
           ))}
         </Accordion>
-        <FieldAccordion
-          title={intl.formatMessage({
-            id: "6xC/Ls",
-            defaultMessage: "SEO Information",
-            description: "informations about product seo, header",
-          })}
-          data={data}
-          fields={[
-            ProductFieldEnum.DESCRIPTION,
-            ProductFieldEnum.NAME,
-            ProductFieldEnum.PRODUCT_MEDIA,
-            ProductFieldEnum.VARIANT_MEDIA,
-          ]}
-          onChange={handleFieldChange}
-          onToggleAll={handleToggleAllFields}
-          data-test-id="seo"
-        />
+        {!isPriceListMode && (
+          <FieldAccordion
+            title={intl.formatMessage({
+              id: "6xC/Ls",
+              defaultMessage: "SEO Information",
+              description: "informations about product seo, header",
+            })}
+            data={data}
+            fields={[
+              ProductFieldEnum.DESCRIPTION,
+              ProductFieldEnum.NAME,
+              ProductFieldEnum.PRODUCT_MEDIA,
+              ProductFieldEnum.VARIANT_MEDIA,
+            ]}
+            onChange={handleFieldChange}
+            onToggleAll={handleToggleAllFields}
+            data-test-id="seo"
+          />
+        )}
       </div>
     </>
   );

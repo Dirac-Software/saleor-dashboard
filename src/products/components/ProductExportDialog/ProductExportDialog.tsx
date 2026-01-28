@@ -22,7 +22,7 @@ import getExportErrorMessage from "@dashboard/utils/errors/export";
 import { toggle } from "@dashboard/utils/lists";
 import { mapNodeToChoice } from "@dashboard/utils/maps";
 import { Box, Option, Text } from "@saleor/macaw-ui-next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import ExportDialogSettings, { ExportItemsQuantity } from "./ExportDialogSettings";
@@ -78,18 +78,17 @@ const priceListDefaults: ExportProductsInput = {
     channels: [], // User must select
     fields: [
       ProductFieldEnum.NAME,
-      ProductFieldEnum.DESCRIPTION,
       ProductFieldEnum.PRODUCT_MEDIA,
       ProductFieldEnum.CATEGORY,
       ProductFieldEnum.PRODUCT_TYPE,
     ],
     warehouses: [],
-    embedImages: true,
-    priceListFormat: true,
-    compressVariants: false,
   },
   fileType: FileTypesEnum.XLSX,
   scope: ExportScope.ALL,
+  embedImages: true,
+  priceListFormat: true,
+  compressVariants: true,
 };
 
 const ProductExportSteps = makeCreatorSteps<ProductExportStep>();
@@ -143,10 +142,42 @@ const ProductExportDialog = ({
   const formData = initialFormData ? { ...baseForm, ...initialFormData } : baseForm;
   const { change, data, reset, submit } = useForm(formData, onSubmit);
 
+  // Auto-select required attributes for price list mode
+  useEffect(() => {
+    if (isPriceListMode && open && attributes.length > 0) {
+      const priceListAttributeNames = ["Brand", "RRP", "Price", "Product Code"];
+      const attributeChoices = mapNodeToChoice(attributes);
+
+      // Find attributes that match the required names (case-insensitive)
+      const matchingAttributes = attributeChoices.filter(attr =>
+        priceListAttributeNames.some(name => attr.label.toLowerCase().includes(name.toLowerCase())),
+      );
+
+      if (matchingAttributes.length > 0) {
+        const attributeIds = matchingAttributes.map(attr => attr.value);
+
+        // Update form data with selected attribute IDs
+        change({
+          target: {
+            name: "exportInfo",
+            value: {
+              ...data.exportInfo,
+              attributes: attributeIds,
+            },
+          },
+        });
+
+        // Update selected attributes state for UI
+        setSelectedAttributes(matchingAttributes);
+      }
+    }
+  }, [isPriceListMode, open, attributes.length]);
+
   useModalDialogOpen(open, {
     onClose: () => {
       reset();
       setStep(ProductExportStep.INFO);
+      setSelectedAttributes([]);
     },
   });
 
@@ -265,8 +296,8 @@ const ProductExportDialog = ({
           <Box marginBottom={4}>
             <Text color="default2" size={2}>
               <FormattedMessage
-                id="kDqbqA"
-                defaultMessage="Pre-configured export for price lists. Select your channel(s) and products below. You can still customize fields and options if needed."
+                id="VCIzsT"
+                defaultMessage="Pre-configured export for price lists with Brand, RRP, Price, Product Code, and Images. Select your channel(s) and warehouse(s) below."
                 description="price list export helper text"
               />
             </Text>
@@ -288,6 +319,7 @@ const ProductExportDialog = ({
             onChannelSelect={handleChannelSelect}
             onSelectAllChannels={handleToggleAllChannels}
             onSelectAllWarehouses={handleToggleAllWarehouses}
+            isPriceListMode={isPriceListMode}
             {...fetchMoreProps}
           />
         )}

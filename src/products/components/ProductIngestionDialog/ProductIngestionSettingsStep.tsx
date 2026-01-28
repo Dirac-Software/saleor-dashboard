@@ -41,13 +41,7 @@ export const ProductIngestionSettingsStep: React.FC<ProductIngestionSettingsStep
     })),
   ];
 
-  const isCreatingNewWarehouse = !data.warehouseName || data.warehouseName === "";
-
   const handleWarehouseChange = (value: string): void => {
-    onChange({
-      target: { name: "warehouseName", value },
-    } as any);
-
     // If selecting an existing warehouse, auto-populate address and country
     if (value && value !== "") {
       const selectedWarehouse = warehouses.find(w => w.name === value);
@@ -63,6 +57,10 @@ export const ProductIngestionSettingsStep: React.FC<ProductIngestionSettingsStep
           .join(", ");
 
         onChange({
+          target: { name: "warehouseName", value: selectedWarehouse.name },
+        } as any);
+
+        onChange({
           target: { name: "warehouseAddress", value: address },
         } as any);
 
@@ -70,15 +68,8 @@ export const ProductIngestionSettingsStep: React.FC<ProductIngestionSettingsStep
           target: { name: "warehouseCountry", value: selectedWarehouse.address.country.code },
         } as any);
       }
-    } else {
-      // Reset fields when creating new warehouse
-      onChange({
-        target: { name: "warehouseAddress", value: "" },
-      } as any);
-      onChange({
-        target: { name: "warehouseCountry", value: "" },
-      } as any);
     }
+    // Don't clear fields when selecting "Create new warehouse" - let user keep typing
   };
 
   const countryOptions =
@@ -103,7 +94,7 @@ export const ProductIngestionSettingsStep: React.FC<ProductIngestionSettingsStep
         <div>
           <Select
             label={intl.formatMessage(messages.warehouseLabel)}
-            value={isCreatingNewWarehouse ? "" : data.warehouseName}
+            value={warehouses.find(w => w.name === data.warehouseName) ? data.warehouseName : ""}
             onChange={handleWarehouseChange}
             options={warehouseOptions}
             size="small"
@@ -113,49 +104,45 @@ export const ProductIngestionSettingsStep: React.FC<ProductIngestionSettingsStep
           </Text>
         </div>
 
-        {isCreatingNewWarehouse && (
-          <>
-            <div>
-              <Input
-                name="warehouseName"
-                label={intl.formatMessage(messages.warehouseNameInputLabel)}
-                value={data.warehouseName}
-                onChange={onChange}
-                size="small"
-                required
-                placeholder="Enter warehouse name"
-              />
-            </div>
+        <div>
+          <Input
+            name="warehouseName"
+            label={intl.formatMessage(messages.warehouseNameInputLabel)}
+            value={data.warehouseName}
+            onChange={onChange}
+            size="small"
+            required
+            placeholder="Enter warehouse name"
+          />
+        </div>
 
-            <div>
-              <Input
-                name="warehouseAddress"
-                label={intl.formatMessage(messages.warehouseAddressLabel)}
-                value={data.warehouseAddress}
-                onChange={onChange}
-                size="small"
-                required
-              />
-            </div>
+        <div>
+          <Input
+            name="warehouseAddress"
+            label={intl.formatMessage(messages.warehouseAddressLabel)}
+            value={data.warehouseAddress}
+            onChange={onChange}
+            size="small"
+            required
+          />
+        </div>
 
-            <div>
-              <Select
-                label={intl.formatMessage(messages.warehouseCountryLabel)}
-                value={data.warehouseCountry}
-                onChange={value =>
-                  onChange({
-                    target: { name: "warehouseCountry", value },
-                  } as any)
-                }
-                options={countryOptions}
-                size="small"
-              />
-              <Text size={2} marginTop={2}>
-                {intl.formatMessage(messages.warehouseCountryHelp)}
-              </Text>
-            </div>
-          </>
-        )}
+        <div>
+          <Select
+            label={intl.formatMessage(messages.warehouseCountryLabel)}
+            value={data.warehouseCountry}
+            onChange={value =>
+              onChange({
+                target: { name: "warehouseCountry", value },
+              } as any)
+            }
+            options={countryOptions}
+            size="small"
+          />
+          <Text size={2} marginTop={2}>
+            {intl.formatMessage(messages.warehouseCountryHelp)}
+          </Text>
+        </div>
 
         <div>
           <Input
